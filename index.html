@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Manilla</title>
+	<script type='text/javascript' src='js/jquery-2.0.0.min.js'></script>
+	<script type='text/javascript' src='js/bootstrap.min.js'></script>
+	<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+	<meta name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+	<meta name='apple-mobile-web-app-status-bar-style' content='dafault'>
+
+	<style type='text/css'>
+		footer{
+			padding-top: 10px;
+			padding-bottom: 10px;
+			margin-top: 20px;
+			text-align: center;
+			border-top: 1px solid #e5e5e5;
+			color: #666;
+			font-size: 11px;
+		}
+
+		.cards img{
+			width: 90px;
+		}
+
+		.jumbotron{
+			padding: 0;
+			margin-bottom: 10px;
+		}
+
+		.navbar{
+			margin-bottom: 0;
+		}
+
+		.disabled{
+			opacity: 0.4;
+		}
+
+		.card-spacer{
+			margin-bottom: 10px;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-default" role="navigation">
+		<div class='container'>
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Manilla</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class='jumbotron text-center' id='reset'>
+		<span id='score' style='width:100%'>0</span>
+	</div>
+
+	<div class='container text-center' style='margin-bottom: 10px'>
+		<div class="btn-group btn-group-justified">
+			<a href='#' class="btn btn-default active">Manillen</a>
+			<a href='#'  class="btn btn-default">Uno</a>
+			<a href='#'  class="btn btn-default">Monopoly</a>
+		</div>
+	</div>
+
+	<div class='container cards text-center'>
+
+		<div class='card-spacer'>
+			<img src='img/card_j.png' data-score='1' data-clicked='0'>
+			<img src='img/card_q.png' data-score='2' data-clicked='0'>
+			<img src='img/card_k.png' data-score='3' data-clicked='0'>
+		</div>
+
+		<div class='card-spacer'>
+			<img src='img/card_a.png' data-score='4' data-clicked='0'>
+			<img src='img/card_10.png' data-score='5' data-clicked='0'>
+		</div>
+	</div>
+
+	<footer>
+		(Tap score to reset)<br />
+		Copyright 2013, Xavier Decuyper<br />
+		X &hearts; Y
+	</footer>
+
+	<script type='text/javascript'>
+
+		var Manilla = {
+
+			setScore: function(score){
+				$('#score').html( score );
+			},
+
+			getScore: function(){
+				return parseInt($('#score').text());
+			},
+
+			addToScore: function(addition){
+				$('#score').html( Manilla.getScore() + addition );
+			}
+
+		};
+		var score = 0;
+
+		function countScore(event){
+			$(this).data('clicked', $(this).data('clicked') +1);
+
+			//score += $(this).data('score');
+			//$('#score').html( score );
+			Manilla.addToScore(score);
+
+			if($(this).data('clicked') == 4){
+				$(this).unbind('touchstart');
+				$(this).addClass('disabled');
+			}
+		}
+
+		$(document).ready(function(){
+			$('.cards>div>img').each(function(){
+				$(this).on('touchstart', countScore);
+			});
+
+			$('#reset').on('touchstart', function(){
+				/*score = 0;
+				$('#score').html(0);*/
+				Manilla.setScore(0);
+
+				$('.cards>div>img').each(function(){
+					$(this).data('clicked', 0);
+					$(this).removeClass('disabled');
+					$(this).unbind('touchstart');
+					$(this).bind('touchstart', countScore);
+				});
+			})
+		});
+	</script>
+</body>
+</html>
